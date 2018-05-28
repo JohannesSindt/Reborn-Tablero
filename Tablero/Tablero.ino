@@ -78,14 +78,14 @@ void loop(void) {
     if(CAN_MSGAVAIL == CAN.checkReceive())            // check if data coming
     {
         CAN.readMsgBuf(&len, buf);    // read data,  len: data length, buf: data buf
-        unsigned int canId = CAN.getCanId();
-        if (canId==0x300){
-           vel_rpm=(unsigned int)(buf[5] + ((buf[6]&0x7F)<<8))-16384;
+        unsigned long canId = CAN.getCanId();
+        if (canId==0x1FE70300){
+           vel_rpm=(int)((buf[5] + ((buf[6]&0x7F)<<8))-16384);
            periodo_tac=(unsigned int)5000/(3.12*(vel_rpm/60)*2*3.1415*0.52*3.6/6);
            periodo_rpm=(unsigned int)24000/vel_rpm;
            
         }
-        if (canId==0x2000){
+        if (canId==0x1FE72000){
           SOC=(unsigned int)(buf[4] + buf[5])/2;
           dac.setVoltage(SOC*4095,false);
         }
